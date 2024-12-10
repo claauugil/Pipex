@@ -9,6 +9,9 @@ SRC = pipex.c \
 	  ft_strlen.c \
 	  ft_substr.c \
 	  ft_strncmp.c \
+	  ft_putstr.c \
+	  errors.c\
+
 
 NAME = pipex
 
@@ -17,6 +20,8 @@ OBJ = $(SRC:.c=.o)
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
+OUTFILE = outfile
+
 all: $(NAME)
 
 $(NAME) : $(OBJ)
@@ -24,6 +29,7 @@ $(NAME) : $(OBJ)
 
 clean:
 	rm -f $(OBJ)
+	rm -f $(OUTFILE)
 fclean: clean
 	rm -f $(NAME)
 re: fclean all
