@@ -1,83 +1,96 @@
+# 🔗 Pipex
 
-## Pipex
+**Pipex** es un programa que simula el comportamiento de las tuberías (`|`) en sistemas Unix-like. El objetivo es manejar procesos y redirecciones de entrada/salida utilizando llamadas al sistema.
 
-Pipex is a program that simulates the behavior of shell pipes in Unix-like systems. The goal of the project is to handle pipes and processes, using system calls to redirect input and output between commands.
+---
 
-## Description
+## 📖 Descripción
 
-This project involves managing pipes and processes. Specifically, it takes the output of the first command and uses it as the input for the second command. Here's what it does:
+El proyecto consiste en ejecutar dos comandos conectados por una tubería, redirigiendo correctamente la entrada y salida de archivos:
 
-- Parse the input arguments.
-- Set up pipes to redirect input/output between cmd1 and cmd2.
-- Execute the commands using system calls, ensuring proper redirection of file descriptors.
-- Write the output of cmd2 to file2.
-## Usage
+1. Analiza los argumentos de entrada.
+2. Crea una tubería para conectar `cmd1` con `cmd2`.
+3. Ejecuta ambos comandos usando llamadas al sistema, redirigiendo los descriptores de archivo.
+4. Escribe el resultado de `cmd2` en `file2`.
 
-The program should be executed as follows:
+---
 
+## 🧪 Uso
+
+### Sintaxis
 
 ```bash
-  ./pipex file1 "cmd1" "cmd2" file2
+./pipex file1 "cmd1" "cmd2" file2
 ```
 
-Arguments: 
+### Argumentos
 
-- File1: Name of the input file.
-- Cmd1: The first shell command with its arguments.
-- Cmd2: The second shell command with its arguments.
-- File2: Name of the output file.
+- `file1`: Archivo de entrada.
+- `cmd1`: Primer comando con sus argumentos.
+- `cmd2`: Segundo comando con sus argumentos.
+- `file2`: Archivo donde se guardará la salida final.
 
-The program will achieve the same result as the following shell command:
+El comportamiento es equivalente al comando de shell:
 
 ```bash
 < file1 cmd1 | cmd2 > file2
 ```
 
+---
 
-## Example
+## 🛠️ Compilación
 
-* Execute
+```bash
+make
+```
+
+## 💡 Ejemplo
+
+### Ejecución:
 
 ```bash
 ./pipex infile "ls -l" "wc -l" outfile
 ```
 
-Equivalent to: 
+### Equivalente en shell:
 
 ```bash
 < infile ls -l | wc -l > outfile
 ```
-## Function Descriptions:
 
-Here is a summary of the most important functions used in the pipex project:
+---
 
+## 🧠 Funciones Principales
 
-_Handle_first_child / handle_sec_child:_
-- Manages the behavior of the child processes.
-- Prepares the pipe for the first and second command using prep_pipe.
-- Closes unused file descriptors using close_fds.
-- Executes the commands with exec.
-- Handles execution errors if exec fails.
+### `handle_first_child` / `handle_sec_child`
 
-_prep_pipe_ : Redirects file descriptors for the current process:
+- Manejan la ejecución de los procesos hijo.
+- Configuran la tubería con `prep_pipe`.
+- Cierran descriptores no necesarios con `close_fds`.
+- Ejecutan los comandos con `exec`.
+- Informan de errores si `exec` falla.
 
-- Uses dup2 to link the input file descriptor to STDIN_FILENO.
-- Links the output file descriptor to STDOUT_FILENO.
+### `prep_pipe`
 
-_exec_ : Executes a command
+- Redirige descriptores de archivo para el proceso actual.
+- Usa `dup2` para conectar el archivo de entrada a `STDIN_FILENO`.
+- Conecta la salida al archivo o a la tubería con `STDOUT_FILENO`.
 
-- Parses the command and its arguments using ft_split.
-- Finds the executable path using get_exec.
-- Runs the command with execve. If it fails, execution returns to print an error.
+### `exec`
 
-_get_path_ : Retrieves the system PATH environment variable:
+- Parsea el comando y sus argumentos con `ft_split`.
+- Busca el ejecutable con `get_exec`.
+- Llama a `execve` para ejecutar el comando.
+- En caso de error, se muestra un mensaje.
 
-- Iterates through the environment variables to find PATH.
-- Splits the paths into an array using ft_split.
-- Terminates the program with an error message if PATH is not found.
+### `get_path`
 
-_get_exec_ : Constructs the full executable path for a command:
+- Busca la variable `PATH` en el entorno.
+- La divide en rutas con `ft_split`.
+- Finaliza con error si no se encuentra.
 
-- Appends the command name to each directory in the PATH using ft_strjoin.
-- Checks if the constructed path is executable with access.
-- Returns the valid path or NULL if not found.
+### `get_exec`
+
+- Une el nombre del comando con cada ruta del `PATH` usando `ft_strjoin`.
+- Verifica con `access` si el ejecutable existe y es válido.
+- Devuelve la ruta válida o `NULL` si no se encuentra.
